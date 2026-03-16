@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Spice Garden — Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #fdf6ee;
+      --dark: #1a1208;
+      --brown: #6b3a1f;
+      --gold: #c8902a;
+      --gold-light: #f0c96b;
+      --muted: #8a7560;
+      --card-bg: #fff9f2;
+      --border: #e8d9c5;
+      --red: #c0392b;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--dark);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      background: var(--dark);
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1.5rem 3rem;
+      overflow: hidden;
+    }
+
+    .hero-pattern {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(200,144,42,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(200,144,42,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .hero-ornament {
+      width: 60px; height: 2px;
+      background: var(--gold);
+      margin: 0 auto 1.5rem;
+      position: relative;
+      animation: fadeUp 0.8s ease both;
+    }
+    .hero-ornament::before, .hero-ornament::after {
+      content: '';
+      position: absolute; top: 50%;
+      width: 6px; height: 6px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+    .hero-ornament::before { left: -10px; }
+    .hero-ornament::after  { right: -10px; }
+
+    .hero-tag {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 9vw, 5rem);
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+
+    .hero-sub {
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.05em;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-badges {
+      display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+    .badge {
+      padding: 0.45rem 1rem;
+      border: 1px solid rgba(200,144,42,0.4);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.08em;
+    }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      animation: fadeUp 1s 0.8s ease both;
+    }
+    .scroll-hint span { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--muted); }
+    .scroll-arrow {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, transparent, var(--gold));
+      animation: dropLine 1.5s ease-in-out infinite;
+    }
+
+    /* ── NAV / CATEGORY TABS ── */
+    .nav-wrap {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1rem;
+    }
+    .nav-tabs {
+      display: flex; gap: 0; overflow-x: auto;
+      scrollbar-width: none;
+      max-width: 640px; margin: 0 auto;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      flex-shrink: 0;
+      padding: 1rem 1.1rem 0.9rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none; border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+      white-space: nowrap;
+    }
+    .nav-tab.active, .nav-tab:hover {
+      color: var(--brown);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── MAIN CONTENT ── */
+    main { max-width: 640px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+    /* ── SECTION HEADER ── */
+    .section { padding-top: 2.5rem; }
+    .section-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      color: var(--brown);
+      white-space: nowrap;
+    }
+
+    /* ── MENU CARDS ── */
+    .menu-grid {
+      display: flex; flex-direction: column; gap: 1px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--border);
+    }
+
+    .menu-item {
+      display: flex; align-items: flex-start; gap: 1rem;
+      padding: 1.1rem 1rem;
+      background: var(--card-bg);
+      transition: background 0.2s;
+      cursor: default;
+    }
+    .menu-item:hover { background: #fff; }
+
+    .item-emoji {
+      font-size: 1.8rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .item-body { flex: 1; min-width: 0; }
+    .item-top {
+      display: flex; justify-content: space-between; align-items: baseline;
+      gap: 0.5rem; flex-wrap: wrap;
+      margin-bottom: 0.25rem;
+    }
+    .item-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--dark);
+    }
+    .item-price {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+    .item-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .item-tags {
+      display: flex; gap: 0.4rem; flex-wrap: wrap;
+      margin-top: 0.5rem;
+    }
+    .tag {
+      font-size: 0.62rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+    }
+    .tag-veg   { background: #e8f5e9; color: #2e7d32; }
+    .tag-spicy { background: #fdecea; color: var(--red); }
+    .tag-new   { background: #fff8e1; color: #b8860b; }
+    .tag-popular { background: #ede7f6; color: #4527a0; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2.5rem 1.5rem 3rem;
+      border-top: 1px solid var(--border);
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    footer .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      color: var(--brown);
+      margin-bottom: 0.5rem;
+    }
+    footer p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    footer .footer-divider {
+      width: 40px; height: 1px;
+      background: var(--border);
+      margin: 1rem auto;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes dropLine {
+      0%, 100% { transform: scaleY(0); transform-origin: top; }
+      50%       { transform: scaleY(1); transform-origin: top; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-pattern"></div>
+    <div class="hero-ornament"></div>
+    <p class="hero-tag">Est. 2019 · Bhopal</p>
+    <h1>Spice<br><em>Garden</em></h1>
+    <p class="hero-sub">Pure Veg · North Indian · Authentic Flavours</p>
+    <div class="hero-badges">
+      <span class="badge">🕐 11am – 11pm</span>
+      <span class="badge">📍 MP Nagar, Bhopal</span>
+      <span class="badge">📞 +91 98765 43210</span>
+    </div>
+    <div class="scroll-hint">
+      <span>View Menu</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- STICKY NAV -->
+  <nav class="nav-wrap">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="scrollTo('starters')">Starters</button>
+      <button class="nav-tab" onclick="scrollTo('mains')">Mains</button>
+      <button class="nav-tab" onclick="scrollTo('breads')">Breads</button>
+      <button class="nav-tab" onclick="scrollTo('rice')">Rice</button>
+      <button class="nav-tab" onclick="scrollTo('desserts')">Desserts</button>
+      <button class="nav-tab" onclick="scrollTo('drinks')">Drinks</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- STARTERS -->
+    <div class="section" id="starters">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">Starters</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="item-emoji">🥗</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Papdi Chaat</span>
+              <span class="item-price">₹120</span>
+            </div>
+            <p class="item-desc">Crispy wheat crackers layered with yogurt, tamarind chutney, sev, and pomegranate seeds.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+              <span class="tag tag-popular">Popular</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-emoji">🌮</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Paneer Tikka</span>
+              <span class="item-price">₹220</span>
+            </div>
+            <p class="item-desc">Marinated cottage cheese cubes grilled in a tandoor with onions and capsicum, served with mint chutney.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+              <span class="tag tag-spicy">Spicy</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-emoji">🧅</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Onion Bhaji</span>
+              <span class="item-price">₹90</span>
+            </div>
+            <p class="item-desc">Golden fried onion fritters seasoned with ajwain and green chillies. Best with tamarind dip.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-emoji">🥙</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Hara Bhara Kebab</span>
+              <span class="item-price">₹160</span>
+            </div>
+            <p class="item-desc">Spinach and peas patties stuffed with paneer, pan-fried to perfection. A garden favourite.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+              <span class="tag tag-new">New</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAINS -->
+    <div class="section" id="mains">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">Main Course</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="item-emoji">🍛</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Dal Makhani</span>
+              <span class="item-price">₹180</span>
+            </div>
+            <p class="item-desc">Slow-cooked black lentils simmered overnight in a rich tomato-butter gravy. Our signature dish.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+              <span class="tag tag-popular">Popular</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-emoji">🫕</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Shahi Paneer</span>
+              <span class="item-price">₹240</span>
+            </div>
+            <p class="item-desc">Soft paneer cubes in a rich cashew-tomato gravy with aromatic whole spices and cream.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-emoji">🥬</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Palak Paneer</span>
+              <span class="item-price">₹210</span>
+            </div>
+            <p class="item-desc">Fresh spinach purée with paneer cubes, tempered with garlic and mild spices.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+              <span class="tag tag-popular">Popular</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <div class="item-emoji">🍲</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Chole Masala</span>
+              <span class="item-price">₹160</span>
+            </div>
+            <p class="item-desc">Punjabi-style chickpeas slow cooked in a bold, tangy masala. Pairs best with bhature.</p>
+            <div class="item-tags">
+              <span class="tag tag-veg">Veg</span>
+              <span class="tag tag-spicy">Spicy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREADS -->
+    <div class="section" id="breads">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">Breads</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="item-emoji">🫓</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Butter Naan</span>
+              <span class="item-price">₹50</span>
+            </div>
+            <p class="item-desc">Soft leavened bread baked in tandoor, finished with melted butter.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span></div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="item-emoji">🧆</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Garlic Naan</span>
+              <span class="item-price">₹60</span>
+            </div>
+            <p class="item-desc">Topped with fresh garlic and coriander, baked till golden.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span><span class="tag tag-popular">Popular</span></div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="item-emoji">🫓</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Laccha Paratha</span>
+              <span class="item-price">₹55</span>
+            </div>
+            <p class="item-desc">Flaky whole wheat layered flatbread, cooked on tawa with ghee.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RICE -->
+    <div class="section" id="rice">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">Rice & Biryani</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="item-emoji">🍚</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Veg Biryani</span>
+              <span class="item-price">₹220</span>
+            </div>
+            <p class="item-desc">Fragrant basmati rice layered with seasonal vegetables and whole spices. Served with raita.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span><span class="tag tag-popular">Popular</span></div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="item-emoji">🍛</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Paneer Pulao</span>
+              <span class="item-price">₹190</span>
+            </div>
+            <p class="item-desc">Lightly spiced basmati with paneer cubes, peas, and fried onions.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESSERTS -->
+    <div class="section" id="desserts">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">Desserts</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="item-emoji">🍮</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Gulab Jamun</span>
+              <span class="item-price">₹80</span>
+            </div>
+            <p class="item-desc">Soft khoya dumplings soaked in rose-cardamom sugar syrup. Served warm (2 pcs).</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span><span class="tag tag-popular">Popular</span></div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="item-emoji">🍨</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Kulfi Falooda</span>
+              <span class="item-price">₹120</span>
+            </div>
+            <p class="item-desc">Creamy pistachio kulfi served over chilled falooda noodles and rose syrup.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span><span class="tag tag-new">New</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="section" id="drinks">
+      <div class="section-header">
+        <div class="section-line"></div>
+        <h2 class="section-title">Drinks</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="menu-grid">
+        <div class="menu-item">
+          <div class="item-emoji">🥛</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Mango Lassi</span>
+              <span class="item-price">₹90</span>
+            </div>
+            <p class="item-desc">Thick Alphonso mango blended with chilled yogurt and a pinch of cardamom.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span><span class="tag tag-popular">Popular</span></div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="item-emoji">🍵</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Masala Chai</span>
+              <span class="item-price">₹40</span>
+            </div>
+            <p class="item-desc">Strong tea brewed with ginger, cardamom, and whole spices. The real deal.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span></div>
+          </div>
+        </div>
+        <div class="menu-item">
+          <div class="item-emoji">🥤</div>
+          <div class="item-body">
+            <div class="item-top">
+              <span class="item-name">Fresh Lime Soda</span>
+              <span class="item-price">₹60</span>
+            </div>
+            <p class="item-desc">Sweet or salted, with sparkling water and a squeeze of fresh lime.</p>
+            <div class="item-tags"><span class="tag tag-veg">Veg</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-logo">Spice Garden</div>
+    <p>MP Nagar, Zone 1, Bhopal — 462011<br>+91 98765 43210 &nbsp;·&nbsp; Open daily 11am–11pm</p>
+    <div class="footer-divider"></div>
+    <p style="font-size:0.65rem; opacity:0.5;">Prices inclusive of taxes &nbsp;·&nbsp; All items are pure vegetarian</p>
+  </footer>
+
+  <script>
+    function scrollTo(id) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Highlight active tab on scroll
+    const sections = ['starters','mains','breads','rice','desserts','drinks'];
+    const tabs = document.querySelectorAll('.nav-tab');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = sections.indexOf(e.target.id);
+          tabs.forEach(t => t.classList.remove('active'));
+          if (idx >= 0) tabs[idx].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+  </script>
+</body>
+</html>
